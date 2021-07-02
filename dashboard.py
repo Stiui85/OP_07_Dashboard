@@ -78,13 +78,38 @@ app.layout = dbc.Container([
             dbc.CardBody([
                 dcc.Slider(id='score_now', value=0.347, min=0.25, max=0.45, step=0.001,
                            marks={0.25: {'label': "Likely to pay"}, 0.45: {'label': "Unlikely to pay"},
-                                  0.347: {'label': "Threshold"}})
+                                  0.347: {'label': "Threshold"}}, tooltip={'always_visible': True})
             ])
         ]),
         dbc.Card([
             dbc.CardBody([
                 dbc.Row([
                     html.H3(id='score_result_now', style={'fontSize': 16, 'TextAlign': 'center'})
+                ], justify='center')
+            ], className='d-flex flex-wrap align-content-center justify-content-center')
+        ])
+    ]),
+    html.Br(),
+    dbc.CardDeck([
+        dbc.Card([
+            dbc.CardBody([
+                dbc.Row([
+                    html.H4('Score above = current score / Score right = updated score',
+                            style={'fontSize': 16, 'TextAlign': 'center'})
+                ], justify='center')
+            ], className='d-flex flex-wrap align-content-center justify-content-center')
+        ]),
+        dbc.Card([
+            dbc.CardBody([
+                dcc.Slider(id='score_after', value=0.347, min=0.25, max=0.45, step=0.001,
+                           marks={0.25: {'label': "Likely to pay"}, 0.45: {'label': "Unlikely to pay"},
+                                  0.347: {'label': "Threshold"}}, tooltip={'always_visible': True})
+            ])
+        ]),
+        dbc.Card([
+            dbc.CardBody([
+                dbc.Row([
+                    html.H4(id='score_result_after', style={'fontSize': 20, 'TextAlign': 'center'})
                 ], justify='center')
             ], className='d-flex flex-wrap align-content-center justify-content-center')
         ])
@@ -178,23 +203,6 @@ app.layout = dbc.Container([
                     figure=px.box()
                 )
             )
-        ])
-    ]),
-    html.Br(),
-    dbc.CardDeck([
-        dbc.Card([
-            dbc.CardBody([
-                dcc.Slider(id='score_after', value=0.347, min=0.25, max=0.45, step=0.001,
-                           marks={0.25: {'label': "Likely to pay"}, 0.45: {'label': "Unlikely to pay"},
-                                  0.347: {'label': "Threshold"}})
-            ])
-        ]),
-        dbc.Card([
-            dbc.CardBody([
-                dbc.Row([
-                    html.H4(id='score_result_after', style={'fontSize': 20, 'TextAlign': 'center'})
-                ], justify='center')
-            ], className='d-flex flex-wrap align-content-center justify-content-center')
         ])
     ]),
     html.Br()
@@ -524,34 +532,10 @@ def output(feature_04, feature_05, feature_06):
             if feature_06 != 'You can select a third feature':
                 features_list.append(feature_06)
         temp = df_plot_2[features_list]
-        feat_axes = ["y", "y2", "y3"]
         fig = go.Figure()
         for i in range(len(features_list)):
             data_col = temp[features_list[i]] + str(i)
-            fig.add_trace(go.Bar(y=data_col.value_counts(), x=data_col.unique(), name=features_list[i],
-                                 yaxis=feat_axes[i]))
-        if feature_05 == "You can select a second feature" and feature_06 == "You can select a third feature":
-            fig.update_layout(yaxis=dict(title=feature_04, titlefont=dict(color="#1f77b4"),
-                                         tickfont=dict(color="#1f77b4")),
-                              margin=dict(l=20, r=20, t=20, b=20))
-        if feature_05 != 'You can select a second feature' and feature_06 == "You can select a third feature":
-            fig.update_layout(yaxis=dict(title=feature_04, titlefont=dict(color="#1f77b4"),
-                                         tickfont=dict(color="#1f77b4")),
-                              yaxis2=dict(title=feature_05, titlefont=dict(color="#d62728"),
-                                          tickfont=dict(color="#d62728"), anchor="x", overlaying="y",
-                                          side="right"),
-                              margin=dict(l=20, r=20, t=20, b=20))
-        if feature_06 != 'You can select a third feature':
-            fig.update_layout(xaxis=dict(domain=[0.25, 1.0]),
-                              yaxis=dict(title=feature_04, titlefont=dict(color="#1f77b4"),
-                                         tickfont=dict(color="#1f77b4")),
-                              yaxis2=dict(title=feature_05, titlefont=dict(color="#d62728"),
-                                          tickfont=dict(color="#d62728"), anchor="free", overlaying="y",
-                                          side="right", position=0.),
-                              yaxis3=dict(title=feature_06, titlefont=dict(color="#9467bd"),
-                                          tickfont=dict(color="#9467bd"), anchor="x", overlaying="y",
-                                          side="right"),
-                              margin=dict(l=20, r=20, t=20, b=20))
+            fig.add_trace(go.Bar(y=data_col.value_counts(), x=data_col.unique(), name=features_list[i]))
         return fig
     else:
         fig = px.box()
