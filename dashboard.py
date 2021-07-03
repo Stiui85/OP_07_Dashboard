@@ -76,9 +76,9 @@ app.layout = dbc.Container([
         ]),
         dbc.Card([
             dbc.CardBody([
-                dcc.Slider(id='score_now', value=0.347, min=0.25, max=0.45, step=0.001,
-                           marks={0.25: {'label': "Likely to pay"}, 0.45: {'label': "Unlikely to pay"},
-                                  0.347: {'label': "Threshold"}}, tooltip={'always_visible': True})
+                dcc.Slider(id='score_now', value=0.291, min=0.19, max=0.55, step=0.001,
+                           marks={0.19: {'label': "Likely to pay"}, 0.55: {'label': "Unlikely to pay"},
+                                  0.291: {'label': "Threshold"}}, tooltip={'always_visible': True})
             ])
         ]),
         dbc.Card([
@@ -101,9 +101,9 @@ app.layout = dbc.Container([
         ]),
         dbc.Card([
             dbc.CardBody([
-                dcc.Slider(id='score_after', value=0.347, min=0.25, max=0.45, step=0.001,
-                           marks={0.25: {'label': "Likely to pay"}, 0.45: {'label': "Unlikely to pay"},
-                                  0.347: {'label': "Threshold"}}, tooltip={'always_visible': True})
+                dcc.Slider(id='score_after', value=0.291, min=0.19, max=0.55, step=0.001,
+                           marks={0.19: {'label': "Likely to pay"}, 0.55: {'label': "Unlikely to pay"},
+                                  0.291: {'label': "Threshold"}}, tooltip={'always_visible': True})
             ])
         ]),
         dbc.Card([
@@ -217,7 +217,7 @@ def output(user):
         probs = model.predict_proba(data_test[data_test["SK_ID_CURR"] == user].drop(["SK_ID_CURR", "TARGET"], axis=1))
         return round(probs[0][1], 3)
     else:
-        return 0.347
+        return 0.291
 
 
 @app.callback(
@@ -226,7 +226,7 @@ def output(user):
 def output(user):
     if user != "":
         probs = model.predict_proba(data_test[data_test["SK_ID_CURR"] == user].drop(["SK_ID_CURR", "TARGET"], axis=1))
-        if probs[0][1] > 0.347:
+        if probs[0][1] > 0.291:
             return "The customer is likely NOT to repay the loan"
         else:
             return "The customer is likely to repay the loan"
@@ -580,7 +580,7 @@ def output(user, feature_01, feature_02, feature_03, feature_04, feature_05, fea
         probs = model.predict_proba(data_test_new)
         return round(probs[0][1], 3)
     else:
-        return 0.347
+        return 0.291
 
 
 @app.callback(
@@ -588,7 +588,7 @@ def output(user, feature_01, feature_02, feature_03, feature_04, feature_05, fea
     [Input('dropdown-user', 'value'), Input('score_after', 'value')])
 def output(user, score):
     if user != "":
-        if score > 0.347:
+        if score > 0.291:
             return "The customer is likely NOT to repay the loan"
         else:
             return "The customer is likely to repay the loan"
